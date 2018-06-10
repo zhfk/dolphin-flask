@@ -1,0 +1,5 @@
+sqlalchemy
+flask_cors
+flask
+flask_sqlalchemy
+aliyun-python-sdk-core-v3
