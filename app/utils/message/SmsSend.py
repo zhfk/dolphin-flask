@@ -1,4 +1,4 @@
-from app.message import SendSmsRequest
+from app.utils.message import SendSmsRequest
 from aliyunsdkcore.client import AcsClient
 from aliyunsdkcore.profile import region_provider
 import const

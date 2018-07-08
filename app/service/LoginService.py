@@ -2,10 +2,12 @@ from flask import Flask, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from flask_cors import *
-from app.bean.User import User
+from app.model.User import User
 import uuid
-from app.message.SmsSend import send_sms
+from app.utils.message.SmsSend import send_sms
+from app.utils.markets.QueryStockPrice import get_last_close
 import random
+from flask import request
 import json
 app = Flask(__name__)
 # 跨域问题
@@ -15,6 +17,10 @@ msg_dict = {}
 
 engine = create_engine('postgresql+psycopg2://Dolphin:ex4bFH9bmMz@106.14.196.51:5432/Dolphin')
 DBSession = sessionmaker(bind=engine)
+
+@app.route('/test', methods=['GET', 'POST'])
+def limk_test():
+    return jsonify({"code": 200, "state": "TESTING SUCCUSS..."})
 
 @app.route('/login/<string:phone>/<string:verify_code>', methods=['GET'])
 def login(phone, verify_code):
@@ -47,21 +53,16 @@ def verify_auth(phone):
     else:
         return jsonify({"code": 600, "state": "FAILD"})
 
-def add_user(user,session):
+def add_user(user, session):
     session.add(user)
     session.commit()
 
-# def query_all():
-#     query = session.query(User).all()
-#     return query
-#
-# def query_by_phone(phone):
-#     query = session.query(User).filter(User.phone == phone).all()
-#     return query
-#
-# def query_by_name(nick_name):
-#     query = session.query(User).filter(User.nick_name == nick_name).all()
-#     return query
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=9966)
+@app.route('/data', methods=['GET', 'POST'])
+def get_data():
+    code = request.json['code']
+    start = request.json['start']
+    end = request.json['end']
+    print(code, start, end)
+    data = get_last_close(code, start, end)
+    return jsonify({"code": 200, "data": data})

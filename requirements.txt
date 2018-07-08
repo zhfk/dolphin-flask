@@ -3,3 +3,8 @@ flask_cors
 flask
 flask_sqlalchemy
 aliyun-python-sdk-core-v3
+lxml
+pandas
+requests
+bs4
+tushare
