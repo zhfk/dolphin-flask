@@ -4,6 +4,21 @@ from sqlalchemy.ext.declarative import declarative_base
 
 BaseModel = declarative_base()
 
+"""
+CREATE TABLE "public"."t_stock" (
+	"id" SERIAL primary key,
+	"code" varchar(8) NOT NULL,
+	"autype" varchar(8) NOT NULL,
+	"index" bool NOT NULL,
+	"date" date NOT NULL,
+	"open" decimal(8,2) NOT NULL,
+	"high" decimal(8,2) NOT NULL,
+	"close" decimal(8,2) NOT NULL,
+	"low" decimal(8,2) NOT NULL,
+	"volume" int8,
+	"amount" decimal(12,2)
+)
+"""
 class Stock(BaseModel):
     """"定义数据模型"""
     table = 't_stocks'

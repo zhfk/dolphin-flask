@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+# from sqlalchemy import create_engine
+# from sqlalchemy.orm import sessionmaker
+from app.utils.database.Connect import *
 from flask_cors import *
 from app.model.User import User
 import uuid
@@ -15,17 +16,18 @@ CORS(app, supports_credentials=True)
 
 msg_dict = {}
 
-engine = create_engine('postgresql+psycopg2://Dolphin:ex4bFH9bmMz@106.14.196.51:5432/Dolphin')
-DBSession = sessionmaker(bind=engine)
+# engine = create_engine('postgresql+psycopg2://Dolphin:ex4bFH9bmMz@106.14.196.51:5432/Dolphin')
+# DBSession = sessionmaker(bind=engine)
 
 @app.route('/test', methods=['GET', 'POST'])
-def limk_test():
+def link_test():
     return jsonify({"code": 200, "state": "TESTING SUCCUSS..."})
 
 @app.route('/login/<string:phone>/<string:verify_code>', methods=['GET'])
 def login(phone, verify_code):
-    session = DBSession()
+    db_session = get_session()
     user = User(phone)
+    add_user(user, db_session)
     if verify_code == msg_dict[phone]:
         return jsonify({"code": 200, "state": "SUCCUSS"})
     else:
@@ -52,10 +54,6 @@ def verify_auth(phone):
         return jsonify({"code": 200, "state": "SUCCUSS"})
     else:
         return jsonify({"code": 600, "state": "FAILD"})
-
-def add_user(user, session):
-    session.add(user)
-    session.commit()
 
 
 @app.route('/data', methods=['GET', 'POST'])
