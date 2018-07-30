@@ -6,7 +6,9 @@ from app.utils.database.Connect import *
 
 # df = ts.get_stock_basics()
 
-def get_last_close(code, start, end):
+# 此逻辑有缺陷，最新的行情日期在收盘前是昨日，收盘后是今日
+# 获得指定股票代码的最新的行情价格
+def get_period_close(code, start, end):
     # print("stock's code is ", stock.code)
     df = ts.get_h_data(code, start=str(start), end=str(end))
     # print(df.head(1))
@@ -30,12 +32,25 @@ def get_last_close(code, start, end):
     print(buf.getvalue())
     return buf.getvalue()
 
+# 获得昨日的日期
 def get_yesterday():
     today = datetime.date.today()
     oneday = datetime.timedelta(days=1)
     yesterday = today - oneday
     return yesterday
 
-# if __name__ == '__main__':
-#     stock = Stock(code = '002337')
-#     QueryStock.get_last_close(stock, '2018-07-01', get_yesterday())
+# 获得期间工作日
+def get_weekday(start, end):
+    begin_date = datetime.datetime.strptime(start, "%Y-%m-%d")
+    stop_date = datetime.datetime.strptime(end, "%Y-%m-%d")
+    date_generated = [begin_date + datetime.timedelta(days=x) for x in range(0, (stop_date - begin_date).days)]
+    weekday = []
+    for date in date_generated:
+        if date.weekday() < 5:
+            weekday.append(date)
+    return weekday
+
+if __name__ == '__main__':
+    # print(str(get_yesterday()))
+    # get_period_close('000001', '2018-07-01', get_yesterday())
+    get_weekday("2018-07-23", "2018-08-04")

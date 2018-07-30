@@ -18,6 +18,3 @@ class User(BaseModel):
 
     def __repr__(self):
         return '<User %s, %s>' % (self.nick_name, self.phone)
-
-# if __name__ == '__main__':
-#     print(User('17606856771'))
